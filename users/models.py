@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -30,3 +32,41 @@ class UserProfile(AbstractUser):
         return self.username
 
 
+class Banner(models.Model):
+    """
+    网页首页轮播图，包含标题、图片、对应url地址、优先级信息
+    """
+    title = models.CharField(max_length=20, verbose_name='标题')
+    banner_image = models.ImageField(max_length=20, upload_to='banner/%Y/%m', verbose_name='轮播图')
+    index = models.IntegerField(default=100, verbose_name='顺序')
+    url = models.URLField(max_length=200, verbose_name='网页地址')
+
+    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+
+    class Meta:
+        verbose_name = '轮播图'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.title
+
+
+class EmailVerifyRecord(models.Model):
+    """
+    邮箱验证码，包含信息有验证码、邮箱地址、发送类型（注册或忘记密码）、发送时间
+    """
+    email_type = (
+        ('register', '注册'),
+        ('forget', '忘记密码')
+    )
+    code = models.CharField(max_length=20, verbose_name='验证码')
+    email = models.EmailField(max_length=100, verbose_name='邮箱')
+    send_type = models.CharField(max_length=10, choices=email_type)
+    send_time = models.DateTimeField(default=datetime.now, verbose_name='发送时间')
+
+    class Meta:
+        verbose_name = '邮箱验证码'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.email
