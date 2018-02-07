@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'course.apps.CourseConfig',
+    'organization.apps.OrganizationConfig',
+    'operation.apps.OperationConfig'
 ]
 
 # 添加这个设置，用users中的UserProfile替换django默认的用户表
