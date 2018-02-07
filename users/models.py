@@ -24,6 +24,8 @@ class UserProfile(AbstractUser):
     mobile = models.CharField(max_length=11, null=True, blank=True, verbose_name='手机号码')
     head_image = models.ImageField(upload_to='image/%Y/%m', default='default.png', max_length=100, verbose_name='头像')
 
+    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+
     class Meta:
         verbose_name = '用户信息'
         verbose_name_plural = verbose_name

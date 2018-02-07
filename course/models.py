@@ -45,7 +45,7 @@ class Lesson(models.Model):
     # 章节与课程是多对一关系，需要在多关系的一方建立一个外键关联少的一方主键
     # 关联外键，通过django的 ForeignKey 只需要注明想要关联的表
     # 会自动获取关联表的ID并创建关联字段
-    course = models.ForeignKey(Course, verbose_name='课程')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程')
 
     name = models.CharField(max_length=100, verbose_name='章节名')
 
@@ -63,7 +63,7 @@ class Video(models.Model):
     """
     定义章节下视频信息。包含关联Lesson表的外键、视频名字、添加时间
     """
-    lesson = models.ForeignKey(Lesson, verbose_name='章节')
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='章节')
     name = models.CharField(max_length=100, verbose_name='视频名')
 
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
@@ -80,10 +80,11 @@ class CourseResource(models.Model):
     """
     课程资源信息，包含 关联课程外键、资源名称、下载资源地址、添加时间信息
     """
-    course = models.ForeignKey(Course, verbose_name='课程')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程')
     name = models.CharField(max_length=100, verbose_name='资源名称')
     # 需要从后台上传资源到指定目录
     download = models.FileField(upload_to='course/resource/%Y/%m', max_length=100, verbose_name='资源地址')
+
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
     class Meta:

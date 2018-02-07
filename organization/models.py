@@ -11,6 +11,7 @@ class City(models.Model):
     """
     name = models.CharField(max_length=20, verbose_name='城市名')
     desc = models.CharField(max_length=200, null=True, blank=True, verbose_name='城市描叙')
+
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
     class Meta:
@@ -25,7 +26,7 @@ class CourseOrg(models.Model):
     """
     机构，包含 机构名、机构封面、机构地址、机构描叙 相关信息
     """
-    city = models.ForeignKey(City, verbose_name='所在城市')
+    city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name='所在城市')
     name = models.CharField(max_length=50, verbose_name='机构名称')
     org_image = models.ImageField(upload_to='org/%Y/%m', verbose_name='机构封面图')
     desc = models.TextField(verbose_name='机构描叙')
@@ -50,7 +51,7 @@ class Teacher(models.Model):
     课程教师相关信息，包含 所属机构、名字、工作年限、工作公司、职位、教学风格等信息
     还包含统计 点击量、收藏数信息
     """
-    org = models.ForeignKey(CourseOrg, verbose_name='所属机构')
+    org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE, verbose_name='所属机构')
     name = models.CharField(max_length=20, verbose_name='教师名')
     work_years = models.IntegerField(verbose_name='工作年限')
     work_company = models.CharField(max_length=50, verbose_name='就职公司')
