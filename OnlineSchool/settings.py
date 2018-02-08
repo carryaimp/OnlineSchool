@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# 把apps目录添加到环境搜索路径，这个apps用于归类django本身的app
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+# 把 extra_apps添加到到环境搜索路径，extra_apps用于存放第三方app
+sys.path.insert(1, os.path.join(BASE_DIR, 'extra_apps'))
 
 # Application definition
 
@@ -37,10 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 用户app
     'users.apps.UsersConfig',
+    # 课程app
     'course.apps.CourseConfig',
+    # 课程机构app
     'organization.apps.OrganizationConfig',
+    # 用户操作app
     'operation.apps.OperationConfig'
+    # 对于以上注册app，也可以直接使用app的名字也行
 ]
 
 # 添加这个设置，用users中的UserProfile替换django默认的用户表
@@ -121,14 +131,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
+# 语言设置为中文
 LANGUAGE_CODE = 'zh-hans'
 
+# 时区设置为东八区，上海和北京在同一个时区
 TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
+# 禁止使用UTC时间
 USE_TZ = False
 
 
@@ -137,6 +150,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+# 告诉django静态文件在哪，在debug=True情况下生效，debug=False情况下失效
 STATICFILES_DIR = [
     os.path.join(BASE_DIR, 'templates')
 ]
