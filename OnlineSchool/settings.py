@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # 把apps目录添加到环境搜索路径，这个apps用于归类django本身的app
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # 把 extra_apps添加到到环境搜索路径，extra_apps用于存放第三方app
-sys.path.insert(1, os.path.join(BASE_DIR, 'extra_apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 
 # Application definition
 
@@ -49,8 +49,14 @@ INSTALLED_APPS = [
     # 课程机构app
     'organization.apps.OrganizationConfig',
     # 用户操作app
-    'operation.apps.OperationConfig'
+    'operation.apps.OperationConfig',
     # 对于以上注册app，也可以直接使用app的名字也行
+
+    # 第三方xadmin注册
+    'xadmin',
+    # githup下载地址： https://github.com/sshwsfc/xadmin/tree/django2
+    # 找到分支，下载django2对应分支的项目，并把xadmin拷贝到extra_apps中
+    'crispy_forms'
 ]
 
 # 添加这个设置，用users中的UserProfile替换django默认的用户表
@@ -141,7 +147,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-# 禁止使用UTC时间
+# 禁止使用UTC时间，如何不为false，django在数据库中存放数据，将会默认为utc时间
 USE_TZ = False
 
 
