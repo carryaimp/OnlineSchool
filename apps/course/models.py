@@ -28,7 +28,7 @@ class Course(models.Model):
     fav_num = models.IntegerField(default=0, verbose_name='收藏人数')
     click_num = models.IntegerField(default=0, verbose_name='课程点击量')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '课程'
@@ -49,7 +49,7 @@ class Lesson(models.Model):
 
     name = models.CharField(max_length=100, verbose_name='章节名')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '章节'
@@ -66,7 +66,7 @@ class Video(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='章节')
     name = models.CharField(max_length=100, verbose_name='视频名')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '章节视频'
@@ -85,7 +85,7 @@ class CourseResource(models.Model):
     # 需要从后台上传资源到指定目录
     download = models.FileField(upload_to='course/resource/%Y/%m', max_length=100, verbose_name='资源地址')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '课程资源'

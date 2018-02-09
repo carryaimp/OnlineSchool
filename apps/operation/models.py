@@ -15,7 +15,7 @@ class UserAsk(models.Model):
     mobile = models.CharField(max_length=11, verbose_name='手机毫秒')
     course_name = models.CharField(max_length=50, verbose_name='课程名')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '用户咨询'
@@ -33,7 +33,7 @@ class CourseComment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程')
     comment = models.CharField(max_length=200, verbose_name='评论')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '课程评论'
@@ -58,7 +58,7 @@ class UserFavorite(models.Model):
     fav_id = models.IntegerField(default=0, verbose_name='数据ID')
     fav_type = models.IntegerField(choices=fav_type_choice, verbose_name='收藏类型')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='收藏时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='收藏时间')
 
     class Meta:
         verbose_name = '用户收藏'
@@ -79,7 +79,7 @@ class UserMessage(models.Model):
     # 约定has 该字段为boolean类型,False 为未读， True为已读
     has_read = models.BooleanField(default=False, verbose_name='是否已读')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '用户消息'
@@ -96,7 +96,7 @@ class UserCourse(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='用户')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '用户课程'

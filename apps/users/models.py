@@ -24,7 +24,7 @@ class UserProfile(AbstractUser):
     mobile = models.CharField(max_length=11, null=True, blank=True, verbose_name='手机号码')
     head_image = models.ImageField(upload_to='image/%Y/%m', default='default.png', max_length=100, verbose_name='头像')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '用户信息'
@@ -43,7 +43,7 @@ class Banner(models.Model):
     index = models.IntegerField(default=100, verbose_name='顺序')
     url = models.URLField(max_length=200, verbose_name='网页地址')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=True, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '轮播图'
@@ -63,8 +63,8 @@ class EmailVerifyRecord(models.Model):
     )
     code = models.CharField(max_length=20, verbose_name='验证码')
     email = models.EmailField(max_length=100, verbose_name='邮箱')
-    send_type = models.CharField(max_length=10, choices=email_type)
-    send_time = models.DateTimeField(default=datetime.now, verbose_name='发送时间')
+    send_type = models.CharField(max_length=10, choices=email_type, verbose_name='验证类型')
+    send_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='发送时间')
 
     class Meta:
         verbose_name = '邮箱验证码'

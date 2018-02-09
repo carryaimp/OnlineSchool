@@ -12,7 +12,7 @@ class City(models.Model):
     name = models.CharField(max_length=20, verbose_name='城市名')
     desc = models.CharField(max_length=200, null=True, blank=True, verbose_name='城市描叙')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '城市'
@@ -36,7 +36,7 @@ class CourseOrg(models.Model):
     click_num = models.IntegerField(default=0, verbose_name='点击数')
     fav_num = models.IntegerField(default=0, verbose_name='收藏数')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = "课程机构"
@@ -62,7 +62,7 @@ class Teacher(models.Model):
     click_num = models.IntegerField(default=0, verbose_name='点击量')
     fav_num = models.IntegerField(default=0, verbose_name='收藏数')
 
-    add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
+    add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 
     class Meta:
         verbose_name = '机构教师'
