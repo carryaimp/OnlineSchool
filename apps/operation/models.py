@@ -12,7 +12,7 @@ class UserAsk(models.Model):
     课程咨询留言表，包含用户名、用户手机号码、咨询课程名、添加时间
     """
     name = models.CharField(max_length=20, verbose_name='姓名')
-    mobile = models.CharField(max_length=11, verbose_name='手机毫秒')
+    mobile = models.CharField(max_length=11, verbose_name='手机号码')
     course_name = models.CharField(max_length=50, verbose_name='课程名')
 
     add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')

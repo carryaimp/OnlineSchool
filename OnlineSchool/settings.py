@@ -26,7 +26,7 @@ SECRET_KEY = 'h@(=9&d-&!1$#45_w7t9oa9%%3_w8okxzy@cs8^ff-ivblw9ra'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # 把apps目录添加到环境搜索路径，这个apps用于归类django本身的app
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
@@ -66,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -93,6 +93,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'OnlineSchool.wsgi.application'
 
+# 自定义 authenticate验证
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -157,6 +161,6 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 # 告诉django静态文件在哪，在debug=True情况下生效，debug=False情况下失效
-STATICFILES_DIR = [
-    os.path.join(BASE_DIR, 'templates')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
 ]
