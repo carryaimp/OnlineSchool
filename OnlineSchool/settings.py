@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    # django对request请求进行拦截找sessionid
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -56,7 +57,9 @@ INSTALLED_APPS = [
     'xadmin',
     # githup下载地址： https://github.com/sshwsfc/xadmin/tree/django2
     # 找到分支，下载django2对应分支的项目，并把xadmin拷贝到extra_apps中
-    'crispy_forms'
+    'crispy_forms',
+    # 简单验证码app，需要数据库存放图片路径的表，需要初始化表操作
+    'captcha'
 ]
 
 # 添加这个设置，用users中的UserProfile替换django默认的用户表
@@ -164,3 +167,14 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+# 邮箱初始化送参数
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'jia2jiayuan@163.com'
+EMAIL_HOST_PASSWORD = 'qq123456'
+EMAIL_USE_TIL = False
+EMAIL_FROM = 'jia2jiayuan@163.com'
+
+
+

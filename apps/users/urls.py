@@ -4,11 +4,11 @@ __date__ = '2018/2/9 13:28'
 
 from django.urls import path
 
-from .views import LoginView, RegisterView
+from .views import LoginView, RegisterView, ActiveView
 
 urlpatterns = [
     path('login/', LoginView.as_view(),  name='login'),
     path('register/', RegisterView.as_view(),  name='register'),
     path('forget/', RegisterView.as_view(),  name='forget'),
-    path('active/', LoginView.as_view(),  name='active'),
+    path('active/<str:email_code>/', ActiveView.as_view(),  name='active'),
 ]

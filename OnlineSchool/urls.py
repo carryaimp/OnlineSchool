@@ -25,4 +25,6 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
     # 用户相关的业务
     path('user/', include('users.urls'), name='user'),
+    # 简单验证码
+    path('captcha/', include('captcha.urls'))
 ]
