@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
-	<title>课程机构列表 - 慕学在线网</title>
+	<title>课程机构列表 - 云学在线网</title>
 	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/animate.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/style.css">
@@ -20,10 +20,9 @@
 		<div  class=" header">
  			<div class="top">
 				<div class="wp">
-					<div class="fl"><p>服务电话：<b>33333333</b></p></div>
+					<div class="fl"><p>服务电话：<b>155-7000-800</b></p></div>
 					<!--登录后跳转-->
                         {% if request.user.is_authenticated %}
-                            1234
                             <div class="personal">
                             <dl class="user fr">
                                 <dd>{{ user.username }}<img class="down fr" src="/static/images/top_down.png"/></dd>
@@ -38,13 +37,12 @@
 	                                </dd>
                                 </dl>
                                 <div class="btn">
-	                                <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
-	                                <a class="fr" href="/logout/">退出</a>
+	                                <a class="personcenter fl" href="usercenter-info.html">个人中心</a>
+	                                <a class="fr" href="{% url 'logout' %}">退出</a>
                                 </div>
                             </div>
                         </div>
                             {% else %}
-                            5678
                             <a style="color:white" class="fr registerbtn" href="{% url 'register' %}">注册</a>
                             <a style="color:white" class="fr loginbtn" href="{% url 'login' %}">登录</a>
 
@@ -56,7 +54,7 @@
 
             <div class="middle">
                 <div class="wp">
-                    <a href="index.html"><img class="fl" src="/static/images/logo.jpg"/></a>
+                    <a href="{% url 'index' %}"><img class="fl" src="/static/images/logo.jpg"/></a>
                     <div class="searchbox fr">
                         <div class="selectContainer fl">
                             <span class="selectOption" id="jsSelectOption" data-value="course">
@@ -79,7 +77,7 @@
 				<div class="nav">
 					<div class="wp">
 						<ul>
-							<li class="active" ><a href="index.html">首页</a></li>
+							<li class="active" ><a href="{% url 'index' %}">首页</a></li>
 							<li >
 								<a href="course-list.html">
 									公开课<img class="hot" src="/static/images/nav_hot.png">
@@ -550,14 +548,14 @@
 				<ul class="cont">
 					<li class="logo"><a href=""><img src="/static/images/footlogo.png"/></a></li>
 					<li class="code"><img src="/static/images/code.jpg"/><p class="center">扫描关注微信</p></li>
-					<li class="third"><img class="fl" src="/static/images/tell.png"/><p class="tell">33333333</p><p class="time">周一至周日 9:00-18:00</p></li>
+					<li class="third"><img class="fl" src="/static/images/tell.png"/><p class="tell">155-7000-800</p><p class="time">周一至周日 9:00-18:00</p></li>
 				</ul>
 
 			</div>
 			<p class="line"></p>
 			<div class="wp clear">
-                <span class="fl">? 2016 www.projectsedu.com 慕学在线-在线学习交流平台 保留所有权利</span>
-                <span class="fr">copyright ? 2016 ICP备案证书号：蜀ICP备xxxxx号-1</span>
+                <span class="fl">? 2016 www.projectsedu.com 云学在线学习交流平台 保留所有权利</span>
+                <span class="fr">copyright ? 2016 ICP备案证书号：湘ICP备xxxxx号-1</span>
 			</div>
 		</div>
 	</footer>

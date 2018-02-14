@@ -61,7 +61,7 @@ class EmailVerifyRecord(models.Model):
         ('register', '注册'),
         ('forget', '忘记密码')
     )
-    code = models.CharField(max_length=20, verbose_name='验证码')
+    code = models.CharField(max_length=36, verbose_name='验证码')
     email = models.EmailField(max_length=100, verbose_name='邮箱')
     send_type = models.CharField(max_length=10, choices=email_type, verbose_name='验证类型')
     send_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='发送时间')
