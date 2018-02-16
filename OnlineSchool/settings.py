@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     # 找到分支，下载django2对应分支的项目，并把xadmin拷贝到extra_apps中
     'crispy_forms',
     # 简单验证码app，需要数据库存放图片路径的表，需要初始化表操作
-    'captcha'
+    'captcha',
+    # 分页功能app
+    'pure_pagination',
 ]
 
 # 添加这个设置，用users中的UserProfile替换django默认的用户表
@@ -69,7 +71,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -89,6 +91,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # django中设置图片的上下文地址
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -175,6 +179,18 @@ EMAIL_HOST_USER = 'jia2jiayuan@163.com'
 EMAIL_HOST_PASSWORD = 'qq123456'
 EMAIL_USE_TIL = False
 EMAIL_FROM = 'jia2jiayuan@163.com'
+
+# 设置文件上传路径
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 分页设置
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}
 
 
 

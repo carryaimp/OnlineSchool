@@ -1,4 +1,3 @@
-from datetime import datetime
 
 from django.db import models
 
@@ -26,13 +25,21 @@ class CourseOrg(models.Model):
     """
     机构，包含 机构名、机构封面、机构地址、机构描叙 相关信息
     """
+    org_category = (
+        ('pxjg', '培训机构'),
+        ('gx', '高校'),
+        ('gr', '个人')
+    )
     city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name='所在城市')
     name = models.CharField(max_length=50, verbose_name='机构名称')
-    org_image = models.ImageField(upload_to='org/%Y/%m', verbose_name='机构封面图')
+    org_image = models.ImageField(upload_to='org/%Y/%m', null=True, blank=True, verbose_name='机构封面图')
     desc = models.TextField(verbose_name='机构描叙')
+    category = models.CharField(max_length=4, choices=org_category, default='pxjg', verbose_name='机构类别')
     address = models.CharField(max_length=150, verbose_name='机构地址')
 
     # 统计
+    student_num = models.IntegerField(default=0, verbose_name='学习人数')
+    course_num = models.IntegerField(default=0, verbose_name='课程数')
     click_num = models.IntegerField(default=0, verbose_name='点击数')
     fav_num = models.IntegerField(default=0, verbose_name='收藏数')
 
@@ -55,7 +62,7 @@ class Teacher(models.Model):
     name = models.CharField(max_length=20, verbose_name='教师名')
     work_years = models.IntegerField(verbose_name='工作年限')
     work_company = models.CharField(max_length=50, verbose_name='就职公司')
-    work_position = models.CharField(max_length=50, verbose_name='就职公司')
+    work_position = models.CharField(max_length=50, verbose_name='就职职位')
     points = models.CharField(max_length=50, verbose_name='教学特点')
 
     # 统计

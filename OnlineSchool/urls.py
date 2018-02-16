@@ -14,9 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-import xadmin
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from django.views.static import serve
+
+import xadmin
+
+from OnlineSchool.settings import MEDIA_ROOT
 
 urlpatterns = [
     # xadmin后台
@@ -24,7 +28,11 @@ urlpatterns = [
     # 主页
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
     # 用户相关的业务
-    path('user/', include('users.urls'), name='user'),
+    path('user/', include('users.urls')),
     # 简单验证码
-    path('captcha/', include('captcha.urls'))
+    path('captcha/', include('captcha.urls')),
+    # 课程机构业务
+    path('org/', include('organization.urls')),
+    # 图片前端显示, 这个是静态文件
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT})
 ]
