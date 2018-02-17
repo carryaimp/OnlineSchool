@@ -5,6 +5,7 @@ from django.views.generic.base import View
 
 from .models import CourseOrg, City
 from .forms import UserAskForm
+from operation.models import UserFavorite
 
 from pure_pagination import Paginator, PageNotAnInteger
 
@@ -71,6 +72,7 @@ class AddAskView(View):
 
 
 class OrgHome(View):
+    """课程机构首页，需要通过org_id传递关联机构的课程和教师信息，并通过传递当前页面的标记实现选中状态"""
     def get(self, request, org_id):
         page_label = 'home'
         render_data = dict()
@@ -79,16 +81,23 @@ class OrgHome(View):
             # 通过外键反查
             all_course = org.course_set.all()[:3]
             all_teacher = org.teacher_set.all()[:1]
+            has_fav = False
+            if UserFavorite.objects.filter(fav_id=org.id, fav_type=2):
+                has_fav = True
             render_data['all_course'] = all_course
             render_data['all_teacher'] = all_teacher
             render_data['org'] = org
             render_data['page_label'] = page_label
+            render_data['has_fav'] = has_fav
             return render(request, 'org/org-detail-homepage.html', render_data)
         else:
             return redirect(to='index')
 
 
 class OrgDescView(View):
+    """
+    课程机构描叙页面
+    """
     def get(self, request, org_id):
         page_label = 'desc'
         render_data = dict()
@@ -97,12 +106,19 @@ class OrgDescView(View):
             # 通过外键反查
             render_data['org'] = org
             render_data['page_label'] = page_label
+            has_fav = False
+            if UserFavorite.objects.filter(fav_id=org.id, fav_type=2):
+                has_fav = True
+            render_data['has_fav'] = has_fav
             return render(request, 'org/org-detail-desc.html', render_data)
         else:
             return redirect(to='index')
 
 
 class OrgCourseView(View):
+    """
+    机构课程页面
+    """
     def get(self, request, org_id):
         page_label = 'course'
         render_data = dict()
@@ -110,15 +126,20 @@ class OrgCourseView(View):
             org = CourseOrg.objects.get(id=org_id)
             # 通过外键反查
             all_course = org.course_set.all()
+            has_fav = False
+            if UserFavorite.objects.filter(fav_id=org.id, fav_type=2):
+                has_fav = True
             render_data['all_course'] = all_course
             render_data['org'] = org
             render_data['page_label'] = page_label
+            render_data['has_fav'] = has_fav
             return render(request, 'org/org-detail-course.html', render_data)
         else:
             return redirect(to='index')
 
 
 class OrgTeacherView(View):
+    """机构教师页面"""
     def get(self, request, org_id):
         page_label = 'teacher'
         if org_id:
@@ -126,9 +147,13 @@ class OrgTeacherView(View):
             org = CourseOrg.objects.get(id=org_id)
             # 通过外键反查
             all_teacher = org.teacher_set.all()
+            has_fav = False
+            if UserFavorite.objects.filter(fav_id=org.id, fav_type=2):
+                has_fav = True
             render_data['all_teacher'] = all_teacher
             render_data['org'] = org
             render_data['page_label'] = page_label
+            render_data['has_fav'] = has_fav
             return render(request, 'org/org-detail-teachers.html', render_data)
         else:
             return redirect(to='index')

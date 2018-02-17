@@ -74,7 +74,12 @@
             </div>
             <div class="btn fr collectionbtn  notlogin
                  "data-favid="22" data-fav-type="1">
-                 收藏
+                {% if has_fav %}
+                    已收藏
+                {% else %}
+                    收藏
+                {% endif %}
+
             </div>
 
         </div>
@@ -144,16 +149,16 @@ function add_fav(current_elem, fav_id, fav_type){
     $.ajax({
         cache: false,
         type: "POST",
-        url:"/org/add_fav/",
+        url:"{% url 'add_fav' %}",
         data:{'fav_id':fav_id, 'fav_type':fav_type},
         async: true,
         beforeSend:function(xhr, settings){
-            xhr.setRequestHeader("X-CSRFToken", "5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy");
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
         },
         success: function(data) {
             if(data.status == 'fail'){
                 if(data.msg == '用户未登录'){
-                    window.location.href="/static/user/login.html";
+                    window.location.href="{% url 'login' %}";
                 }else{
                     alert(data.msg)
                 }
@@ -166,7 +171,7 @@ function add_fav(current_elem, fav_id, fav_type){
 }
 
 $('.collectionbtn').on('click', function(){
-    add_fav($(this), 1, 2);
+    add_fav($(this), {{ org.id }}, 2);
 });
 
 $(function(){
