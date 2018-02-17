@@ -37,7 +37,7 @@ class LoginView(View):
     用户登录
     """
     def get(self, request):
-        return render(request, 'login.html')
+        return render(request, 'user/login.html')
 
     def post(self, request):
         render_data = dict()
@@ -58,13 +58,13 @@ class LoginView(View):
                     return render(request, 'index.html')
                 else:
                     render_data['msg'] = '用户未激活'
-                    return render(request, 'login.html', render_data)
+                    return render(request, 'user/login.html', render_data)
             else:
                 render_data['msg'] = '用户名或密码错误'
-                return render(request, 'login.html', render_data)
+                return render(request, 'user/login.html', render_data)
         else:
             render_data['msg'] = ''
-            return render(request, 'login.html', render_data)
+            return render(request, 'user/login.html', render_data)
 
 
 class LogoutView(View):
@@ -82,7 +82,7 @@ class RegisterView(View):
     """
     def get(self, request):
         register_form = RegisterForm()
-        return render(request, 'register.html', {
+        return render(request, 'user/register.html', {
             'register_form': register_form
         })
 
@@ -97,7 +97,7 @@ class RegisterView(View):
             # 判断这个邮箱是否注册
             if UserProfile.objects.filter(email=user_email):
                 render_data['email_error'] = '该邮箱已经注册'
-                return render(request, 'register.html', render_data)
+                return render(request, 'user/register.html', render_data)
             # 通过send_status判断是否发送成功判断这个邮箱是否存在
             send_status = send_email(email_address=user_email, email_type='register')
             if send_status:
@@ -113,10 +113,10 @@ class RegisterView(View):
                 return redirect(to=email_url)
             else:
                 render_data['email_error'] = '该邮箱不存在'
-                return render(request, 'register.html', render_data)
+                return render(request, 'user/register.html', render_data)
         else:
             render_data['email_error'] = ''
-            return render(request, 'register.html', render_data)
+            return render(request, 'user/register.html', render_data)
 
 
 class ForgetView(View):
@@ -125,7 +125,7 @@ class ForgetView(View):
     """
     def get(self, request):
         forget_form = ForgetForm()
-        return render(request, 'forgetpwd.html', {
+        return render(request, 'user/forgetpwd.html', {
             'forget_form': forget_form
         })
 
@@ -144,10 +144,10 @@ class ForgetView(View):
                     return redirect(to=email_url)
             else:
                 render_data['email_error'] = '该邮箱未注册'
-                return render(request, 'forgetpwd.html', render_data)
+                return render(request, 'user/forgetpwd.html', render_data)
         else:
             render_data['email_error'] = ''
-            return render(request, 'forgetpwd.html', render_data)
+            return render(request, 'user/forgetpwd.html', render_data)
 
 
 class ResetView(View):
@@ -160,7 +160,7 @@ class ResetView(View):
         except:
             return redirect(to='index')
         if user_email:
-            return render(request, 'password_reset.html', {
+            return render(request, 'user/password_reset.html', {
                 'email': user_email,
                 'email_code': email_code
             })
@@ -205,10 +205,10 @@ class ModifyView(View):
                     return redirect(to='login')
             else:
                 render_data['pwd_error'] = '两次密码不相同'
-                return render(request, 'password_reset.html', render_data)
+                return render(request, 'user/password_reset.html', render_data)
         else:
             render_data['pwd_error'] = ''
-            return render(request, 'password_reset.html', render_data)
+            return render(request, 'user/password_reset.html', render_data)
 
 
 class ActiveView(View):

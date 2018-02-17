@@ -59,14 +59,14 @@
                         {% for org in all_org.object_list %}
                             <dl class="des difdes">
                                 <dt>
-                                    <a href="org-detail-homepage.html">
+                                    <a href="{% url 'org_home' org.id %}">
                                         <img width="200" height="120" class="scrollLoading"
                                              data-url="{{ MEDIA_URL }}{{ org.org_image }}"/>
                                     </a>
                                 </dt>
                                 <dd>
                                     <div class="clearfix">
-                                        <a href="org-detail-homepage.html">
+                                        <a href="{% url 'org_home' org.id %}">
                                             <h1>{{ org.name }}</h1>
                                             <div class="pic fl">
 
@@ -137,6 +137,7 @@
                     </div>
                     <p class="error company-tips" id="jsCompanyTips"></p>
                     <input class="btn" type="text" id="jsStayBtn" value="立即咨询 >"/>
+                    {% csrf_token %}
                 </form>
             </div>
 
@@ -163,8 +164,8 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: "/org/add_ask/",
-                    data: $('#jsStayForm').serialize('{% csrf_token %}'),
+                    url: "{% url 'add_ask' %}",
+                    data: $('#jsStayForm').serialize(),
                     async: true,
                     success: function (data) {
                         if (data.status == 'success') {

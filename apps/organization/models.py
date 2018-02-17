@@ -59,6 +59,7 @@ class Teacher(models.Model):
     还包含统计 点击量、收藏数信息
     """
     org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE, verbose_name='所属机构')
+    image = models.ImageField(null=True, blank=True, max_length=50, upload_to='teacher/%Y/%m', verbose_name='教师照片')
     name = models.CharField(max_length=20, verbose_name='教师名')
     work_years = models.IntegerField(verbose_name='工作年限')
     work_company = models.CharField(max_length=50, verbose_name='就职公司')

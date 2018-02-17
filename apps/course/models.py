@@ -1,8 +1,9 @@
-from datetime import datetime
 
 from django.db import models
 
 # Create your models here.
+
+from organization.models import CourseOrg
 
 
 class Course(models.Model):
@@ -16,6 +17,7 @@ class Course(models.Model):
         ('zj', '中级'),
         ('gj', '高级')
     )
+    org = models.ForeignKey(CourseOrg, null=True, blank=True, on_delete=True, verbose_name='课程机构',)
     name = models.CharField(max_length=50, verbose_name='课程名')
     course_image = models.ImageField(upload_to='course/%Y/%m', verbose_name='课程封面图')
     desc = models.CharField(max_length=300, verbose_name='课程简介')
