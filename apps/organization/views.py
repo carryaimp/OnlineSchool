@@ -2,8 +2,9 @@ import json
 
 from django.shortcuts import render, HttpResponse, redirect
 from django.views.generic.base import View
+from django.db.models import Q
 
-from .models import CourseOrg, City
+from .models import CourseOrg, City, Teacher
 from .forms import UserAskForm
 from operation.models import UserFavorite
 
@@ -20,6 +21,10 @@ class OrgListView(View):
         sort_key = request.GET.get('sort', '')
         print(sort_key)
         # 前端对结果进行赛选
+        keywords = request.GET.get('keywords', None)
+        if keywords:
+            all_org = all_org.filter(Q(name__icontains=keywords) | Q(desc__icontains=keywords) |
+                                     Q(category__icontains=keywords) | Q(address__icontains=keywords))
         # 按城市赛选
         if city_id:
             all_org = all_org.filter(city=city_id)
@@ -138,22 +143,69 @@ class OrgCourseView(View):
             return redirect(to='index')
 
 
-class OrgTeacherView(View):
+class OrgTeacherListView(View):
     """机构教师页面"""
-    def get(self, request, org_id):
-        page_label = 'teacher'
-        if org_id:
-            render_data = dict()
-            org = CourseOrg.objects.get(id=org_id)
-            # 通过外键反查
-            all_teacher = org.teacher_set.all()
-            has_fav = False
-            if UserFavorite.objects.filter(fav_id=org.id, fav_type=2):
-                has_fav = True
-            render_data['all_teacher'] = all_teacher
-            render_data['org'] = org
-            render_data['page_label'] = page_label
-            render_data['has_fav'] = has_fav
-            return render(request, 'org/org-detail-teachers.html', render_data)
-        else:
-            return redirect(to='index')
+    def get(self, request):
+        page_label = 'list'
+        all_teacher = Teacher.objects.all()
+        teacher_num = all_teacher.count()
+        hot_teacher = all_teacher.order_by('-click_num')[:3]
+        keywords = request.GET.get('keywords', None)
+        # 搜索
+        if keywords:
+            all_teacher = all_teacher.filter(Q(name__icontains=keywords) | Q(work_company__icontains=keywords) |
+                                     Q(work_position__icontains=keywords) | Q(points__icontains=keywords))
+
+        # 排序
+        if request.GET.get('sort', None) == 'hot':
+            page_label = 'hot'
+            all_teacher = all_teacher.order_by('-click_num')
+        # 分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_teacher, per_page=5, request=request)
+        # 进行分页
+        all_teacher = p.page(page)
+
+        render_data = dict()
+        render_data['all_teacher'] = all_teacher
+        render_data['teacher_num'] = teacher_num
+        render_data['hot_teacher'] = hot_teacher
+        render_data['page_label'] = page_label
+        return render(request, 'teacher/teachers-list.html', render_data)
+
+
+class OrgTeacherDetailView(View):
+    """
+    教师详情页面
+    """
+    def get(self, request, teacher_id):
+        if teacher_id <= 0 or not teacher_id:
+            return redirect(to='teacher')
+        # 是否能查到此记录
+        try:
+            teacher = Teacher.objects.get(id=teacher_id)
+        except:
+            return redirect(to='teacher')
+        render_data = dict()
+        has_teacher_fav = True if UserFavorite.objects.filter(user=request.user, fav_id=teacher.id, fav_type=3) else False
+        has_org_fav = True if UserFavorite.objects.filter(user=request.user, fav_id=teacher.org.id, fav_type=2) else False
+        all_course = teacher.get_all_course()
+        hot_teacher = Teacher.objects.all().order_by('-fav_num')[:3]
+        # 分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_course, per_page=8, request=request)
+        # 进行分页
+        all_course = p.page(page)
+
+        render_data['teacher'] = teacher
+        render_data['all_course'] = all_course
+        render_data['hot_teacher'] = hot_teacher
+        render_data['has_teacher_fav'] = has_teacher_fav
+        render_data['has_org_fav'] = has_org_fav
+        return render(request, 'teacher/teacher-detail.html', render_data)

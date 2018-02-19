@@ -71,6 +71,7 @@ class Teacher(models.Model):
     org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE, verbose_name='所属机构')
     image = models.ImageField(null=True, blank=True, max_length=50, upload_to='teacher/%Y/%m', verbose_name='教师照片')
     name = models.CharField(max_length=20, verbose_name='教师名')
+    age = models.IntegerField(default=0, verbose_name='年龄')
     work_years = models.IntegerField(verbose_name='工作年限')
     work_company = models.CharField(max_length=50, verbose_name='就职公司')
     work_position = models.CharField(max_length=50, verbose_name='就职职位')
@@ -88,3 +89,6 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_all_course(self):
+        return self.org.course_set.all()

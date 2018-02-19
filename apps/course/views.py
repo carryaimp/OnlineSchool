@@ -2,6 +2,7 @@ import json
 
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic.base import View
+from django.db.models import Q
 
 from .models import Course, Lesson, CourseResource, Video
 from operation.models import UserFavorite, UserCourse, CourseComment
@@ -19,6 +20,10 @@ class CourseListView(View):
         render_data = dict()
         all_course = Course.objects.all().order_by('-add_time')
         order_key = request.GET.get('sort', '')
+        # 搜索
+        keywords = request.GET.get('keywords', None)
+        if keywords:
+            all_course = all_course.filter(Q(name__icontains=keywords) | Q(desc__icontains=keywords) | Q(detail__icontains=keywords))
         hot_course = all_course.order_by('-fav_num')[:3]
         # 排序
         if order_key:
