@@ -8,7 +8,9 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 
 
-from .models import UserProfile, EmailVerifyRecord
+from .models import UserProfile, EmailVerifyRecord, Banner
+from organization.models import CourseOrg
+from course.models import Course
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from tools.send_email import send_email, get_mail_url
 
@@ -231,3 +233,19 @@ class ActiveView(View):
                 return redirect(to='register')
         else:
             return redirect(to='register')
+
+
+class HomeView(View):
+    """站点首页"""
+    def get(self, request):
+        render_data = dict()
+        banners = Banner.objects.all().order_by('-index')[:5]
+        all_course = Course.objects.all()
+        course_banners = all_course.order_by('-click_num')[:3]
+        home_courses = all_course.order_by('-add_time')[:6]
+        home_orgs = CourseOrg.objects.all()[:15]
+        render_data['banners'] = banners
+        render_data['course_banners'] = course_banners
+        render_data['home_courses'] = home_courses
+        render_data['home_orgs'] = home_orgs
+        return render(request, 'index.html', render_data)

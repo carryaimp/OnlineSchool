@@ -39,7 +39,7 @@ class Banner(models.Model):
     网页首页轮播图，包含标题、图片、对应url地址、优先级信息
     """
     title = models.CharField(max_length=20, verbose_name='标题')
-    banner_image = models.ImageField(max_length=20, upload_to='banner/%Y/%m', verbose_name='轮播图')
+    banner_image = models.ImageField(max_length=50, upload_to='banner/%Y/%m', verbose_name='轮播图')
     index = models.IntegerField(default=100, verbose_name='顺序')
     url = models.URLField(max_length=200, verbose_name='网页地址')
 

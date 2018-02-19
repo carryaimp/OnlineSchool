@@ -21,12 +21,12 @@ from django.views.static import serve
 import xadmin
 
 from OnlineSchool.settings import MEDIA_ROOT
-
+from users.views import HomeView
 urlpatterns = [
     # xadmin后台
     path('xadmin/', xadmin.site.urls),
     # 主页
-    path('', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('', HomeView.as_view(), name='index'),
     # 用户相关的业务
     path('user/', include('users.urls')),
     # 简单验证码
