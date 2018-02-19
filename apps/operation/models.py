@@ -40,7 +40,7 @@ class CourseComment(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
 
 class UserFavorite(models.Model):
@@ -103,4 +103,4 @@ class UserCourse(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.user
+        return self.user.username

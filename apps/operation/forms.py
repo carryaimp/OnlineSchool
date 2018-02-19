@@ -4,10 +4,10 @@ __date__ = '2018/2/17 21:50'
 
 from django import forms
 
-from .models import UserFavorite
+from .models import CourseComment
 
 
-class UserFavoriteForm(forms.ModelForm):
+class CourseCommentForm(forms.ModelForm):
     class Meta:
-        model = UserFavorite
-        fields = ['user', 'fav_id', 'fav_type']
+        model = CourseComment
+        fields = ['user', 'course', 'comment']

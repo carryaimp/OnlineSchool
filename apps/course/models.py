@@ -3,7 +3,8 @@ from django.db import models
 
 # Create your models here.
 
-from organization.models import CourseOrg
+from organization.models import CourseOrg, Teacher
+from users.models import UserProfile
 
 
 class Course(models.Model):
@@ -18,13 +19,17 @@ class Course(models.Model):
         ('gj', '高级')
     )
     org = models.ForeignKey(CourseOrg, null=True, blank=True, on_delete=True, verbose_name='课程机构',)
+    teacher = models.ForeignKey(Teacher, null=True, blank=True, on_delete=True, verbose_name='讲师')
     name = models.CharField(max_length=50, verbose_name='课程名')
     course_image = models.ImageField(upload_to='course/%Y/%m', verbose_name='课程封面图')
     desc = models.CharField(max_length=300, verbose_name='课程简介')
     detail = models.TextField(verbose_name='课程详情')
     degree = models.CharField(max_length=2, choices=course_degree, verbose_name='课程难度')
     learn_time = models.IntegerField(default=0, verbose_name='学习总时长(分钟)')
-
+    category = models.CharField(max_length=20, null=True, blank=True, verbose_name='课程类别')
+    message = models.CharField(max_length=20, null=True, blank=True, verbose_name='课程公告')
+    need_know = models.CharField(max_length=50, null=True, blank=True, verbose_name='课程须知')
+    can_learn = models.CharField(max_length=50, null=True, blank=True, verbose_name='学到知识')
     # 统计
     students = models.IntegerField(default=0, verbose_name='学习人数')
     fav_num = models.IntegerField(default=0, verbose_name='收藏人数')
@@ -38,6 +43,14 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+    def lesson_num(self):
+        # 获得单个实例的章节数
+        return self.lesson_set.all().count()
+
+    def learn_user(self):
+        # 获得学习该课程的学生，只取5个
+        return self.usercourse_set.all().order_by('-add_time')[:5]
 
 
 class Lesson(models.Model):
@@ -67,6 +80,7 @@ class Video(models.Model):
     """
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='章节')
     name = models.CharField(max_length=100, verbose_name='视频名')
+    url = models.CharField(max_length=200, null=True, blank=True, verbose_name='访问地址')
 
     add_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='添加时间')
 

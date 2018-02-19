@@ -1,0 +1,47 @@
+{% extends 'course/course-base.html' %}
+
+{% block title %}
+    课程章节信息 - 云学在线网
+{% endblock %}
+
+{% block add_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/base.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/common-less.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/course/learn-less.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/mooc.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/course/common-less.css">
+{% endblock %}
+
+{% block page_name %}
+    章节信息
+{% endblock %}
+
+{% block lesson_video %}
+    <div id="notice" class="clearfix">
+        <div class="l"><strong>课程公告:</strong> <a href="javascript:void(0)">{{ course.message }}</a>
+        </div>
+    </div>
+    <div class="mod-chapters">
+        {% for lesson in all_lesson %}
+            <div class="chapter chapter-active">
+                <h3>
+                    <strong><i class="state-expand"></i>{{ lesson.name }}</strong>
+                </h3>
+                <ul class="video">
+                    {% for video in lesson.video_set.all %}
+                        <li>
+                            <a target="_blank" href=''
+                               class="J-media-item studyvideo">{{ video.name }}
+                                <i class="study-state"></i>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+

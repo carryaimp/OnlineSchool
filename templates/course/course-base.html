@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block wrapper %}
+    <section>
+        <div class="wp">
+            <div class="crumbs">
+                <ul>
+                    <li><a href="{% url 'index' %}">首页</a>></li>
+                    <li><a href="{% url 'course_list' %}">公开课程</a>></li>
+                    <li><a href="{% url 'course_detail' course.id %}">课程详情</a>></li>
+                    <li>{% block page_name %}{% endblock %}</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+    <div id="main">
+        <div class="course-infos">
+            <div class="w pr">
+                <div style="height: 15px" class="path">
+                </div>
+                <div class="hd">
+                    <h2 class="l">{{ course.name }}</h2>
+                </div>
+                <div class="statics clearfix">
+                    <div class="static-item ">
+                        <span class="meta-value"><strong>{{ course.get_degree_display }}</strong></span>
+                        <span class="meta">难度</span>
+                        <em></em>
+                    </div>
+                    <div class="static-item static-time">
+                        <span class="meta-value">{{ course.learn_time }}分钟</span>
+                        <span class="meta">时长</span>
+                        <em></em>
+                    </div>
+                    <div class="static-item">
+                        <span class="meta-value"><strong>{{ course.students }}</strong></span>
+                        <span class="meta">学习人数</span>
+                        <em></em>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="course-info-main clearfix w has-progress">
+            {% block video_comment %}
+                <div class="info-bar clearfix">
+                    <div class="content-wrap clearfix">
+                        <div class="content">
+                            <div class="mod-tab-menu">
+                                <ul class="course-menu clearfix">
+                                    <li><a class="ui-tabs-active active {% if request.path == '' %}{% endif %}"
+                                           id="learnOn"
+                                           href="{% url 'course_lesson' course.id %}"><span>章节{{ request.user.id }}</span></a>
+                                    </li>
+                                    <li><a id="commentOn" class=""
+                                           href="{% url 'course_comment' course.id %}"><span>评论</span></a></li>
+                                </ul>
+                            </div>
+                            {% block lesson_video %}
+
+                            {% endblock %}
+
+                        </div>
+                        <div class="aside r">
+                            <div class="bd">
+
+                                <div class="box mb40">
+                                    <h4>资料下载</h4>
+                                    <ul class="downlist">
+                                        {% for resource in all_course_resource %}
+                                            <li>
+                                                <span><i
+                                                        class="aui-iconfont aui-icon-file"></i>{{ resource.name }}</span>
+                                                <a href="{{ MEDIA_URL }}{{ resource.download }}" class="downcode"
+                                                   target="_blank" download="" data-id="274" title="">下载</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="box mb40">
+                                    <h4>讲师提示</h4>
+                                    <div class="teacher-info">
+                                        <a href="" target="_blank">
+                                            <img src='{{ MEDIA_URL }}{{ course.teacher.image }}' width='80'
+                                                 height='80'/>
+                                        </a>
+                                        <span class="tit">
+          <a href="/u/315464/courses?sort=publish" target="_blank">{{ course.teacher.name }}</a>
+        </span>
+                                        <span class="job">{{ course.teacher.work_years }}</span>
+                                    </div>
+                                    <div class="course-info-tip">
+                                        <dl class="first">
+                                            <dt>课程须知</dt>
+                                            <dd class="autowrap">{{ course.need_know }}</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>老师告诉你能学到什么？</dt>
+                                            <dd class="autowrap">{{ course.can_learn }}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+
+
+                                <div class="cp-other-learned  js-comp-tabs">
+                                    <div class="cp-header clearfix">
+                                        <h2 class="cp-tit l">该课的同学还学过</h2>
+                                    </div>
+                                    <div class="cp-body">
+                                        <div class="cp-tab-pannel js-comp-tab-pannel" data-pannel="course"
+                                             style="display: block">
+                                            <!-- img 200 x 112 -->
+                                            <ul class="other-list">
+                                                {% for course in relate_course %}
+                                                    <li class="curr">
+                                                        <a href="{% url 'course_detail' course.id %}" target="_blank">
+                                                            <img src="{{ MEDIA_URL }}{{ course.course.course_image }}"
+                                                                 alt="{{ course.course.name }}">
+                                                            <span class="name autowrap">{{ course.course.name }}</span>
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block add_js %}
+    <script type="text/javascript">
+        //添加评论
+        $('#js-pl-submit').on('click', function () {
+            var comments = $("#js-pl-textarea").val()
+            if (comments == "") {
+                alert("评论不能为空")
+                return
+            }
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "{% url 'course_comment' course.id %}",
+                data: {'course_id': {{ course.id }}, 'comments': comments},
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status == 'fail') {
+                        if (data.msg == '用户未登录') {
+                            window.location.href = "{% url 'index' %}";
+                        } else {
+                            alert(data.msg)
+                        }
+
+                    } else if (data.status == 'success') {
+                        window.location.reload();//刷新当前页面.
+                    }
+                },
+            });
+        });
+
+    </script>
+{% endblock %}

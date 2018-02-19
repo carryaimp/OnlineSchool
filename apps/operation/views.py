@@ -3,7 +3,6 @@ import json
 from django.shortcuts import render, HttpResponse
 from django.views.generic.base import View
 
-from .forms import UserFavoriteForm
 from .models import UserFavorite
 from course.models import Course
 from organization.models import CourseOrg, Teacher

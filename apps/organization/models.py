@@ -39,7 +39,6 @@ class CourseOrg(models.Model):
 
     # 统计
     student_num = models.IntegerField(default=0, verbose_name='学习人数')
-    course_num = models.IntegerField(default=0, verbose_name='课程数')
     click_num = models.IntegerField(default=0, verbose_name='点击数')
     fav_num = models.IntegerField(default=0, verbose_name='收藏数')
 
@@ -51,6 +50,17 @@ class CourseOrg(models.Model):
 
     def __str__(self):
         return self.name
+
+    def course_num(self):
+        """
+        获得所有的课程数量
+        :return:
+        """
+        return self.course_set.all().count()
+
+    def teacher_num(self):
+        # 获得对应机构老师的数量
+        return self.teacher_set.all().count()
 
 
 class Teacher(models.Model):

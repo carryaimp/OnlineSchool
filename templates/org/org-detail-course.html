@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block right_content %}
-        <div class="right companycenter layout">
-            <div class="head">
-                <h1>机构课程</h1>
-            </div>
-            <div class="brief group_list">
+    <div class="right companycenter layout">
+        <div class="head">
+            <h1>机构课程</h1>
+        </div>
+        <div class="brief group_list">
             {% for course in all_course %}
                 <div class="module1_5 box">
                     <a class="comp-img-box" href="course-detail.html">
@@ -30,13 +30,13 @@
                     </div>
                 </div>
             {% endfor %}
-            </div>
-            <div class="pageturn">
-                <ul class="pagelist">
-                    <li class="active"><a href="?page=1">1</a></li>
-                </ul>
-            </div>
         </div>
+        <div class="pageturn">
+            <ul class="pagelist">
+                <li class="active"><a href="?page=1">1</a></li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 
 {% block wrapper_menu %}

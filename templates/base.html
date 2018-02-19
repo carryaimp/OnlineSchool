@@ -24,17 +24,20 @@
                     {% if request.user.is_authenticated %}
                         <div class="personal">
                             <dl class="user fr">
-                                <dd>{{ user.username }}<img class="down fr" src="/static/images/top_down.png"/></dd>
-                                <dt><img width="20" height="20" src="/static/media/image/2016/12/default_big_14.png"/>
+                                <dd>{% if user.nick_name %}{{ user.nick_name }}{% else %}
+                                    {{ user.username }}{% endif %}<img class="down fr"
+                                                                       src="/static/images/top_down.png"/></dd>
+                                <dt><img width="20" height="20" src="{{ MEDIA_URL }}{{ user.head_image }}"/>
                                 </dt>
                             </dl>
                             <div class="userdetail">
                                 <dl>
                                     <dt><img width="80" height="80"
-                                             src="/static/media/image/2016/12/default_big_14.png"/></dt>
+                                             src="{{ MEDIA_URL }}{{ user.head_image }}"/></dt>
                                     <dd>
-                                        <h2>django</h2>
-                                        <p>bobby</p>
+                                        <h2>{{ user.last_login }}</h2>
+                                        <p>{% if user.nick_name %}{{ user.nick_name }}{% else %}
+                                            {{ user.username }}{% endif %}</p>
                                     </dd>
                                 </dl>
                                 <div class="btn">
@@ -77,7 +80,7 @@
                         <ul>
                             <li class="active"><a href="{% url 'index' %}">首页</a></li>
                             <li>
-                                <a href="course-list.html">
+                                <a href="{% url 'course_list' %}">
                                     公开课<img class="hot" src="/static/images/nav_hot.png">
                                 </a>
                             </li>
@@ -100,10 +103,6 @@
 {% block content %}
 
 {% endblock %}
-
-
-
-
 
 <footer>
     <div class="footer">

@@ -36,5 +36,6 @@ urlpatterns = [
     # 图片前端显示, 这个是静态文件
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
     # 用户操作逻辑业务
-    path('operation/', include('operation.urls'))
+    path('operation/', include('operation.urls')),
+    path('course/', include('course.urls'))
 ]
