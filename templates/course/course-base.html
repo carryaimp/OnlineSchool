@@ -18,30 +18,32 @@
 {% block content %}
     <div id="main">
         <div class="course-infos">
-            <div class="w pr">
-                <div style="height: 15px" class="path">
-                </div>
-                <div class="hd">
-                    <h2 class="l">{{ course.name }}</h2>
-                </div>
-                <div class="statics clearfix">
-                    <div class="static-item ">
-                        <span class="meta-value"><strong>{{ course.get_degree_display }}</strong></span>
-                        <span class="meta">难度</span>
-                        <em></em>
+            {% block main_head %}
+                <div class="w pr">
+                    <div style="height: 15px" class="path">
                     </div>
-                    <div class="static-item static-time">
-                        <span class="meta-value">{{ course.learn_time }}分钟</span>
-                        <span class="meta">时长</span>
-                        <em></em>
+                    <div class="hd">
+                        <h2 class="l">{{ course.name }}</h2>
                     </div>
-                    <div class="static-item">
-                        <span class="meta-value"><strong>{{ course.students }}</strong></span>
-                        <span class="meta">学习人数</span>
-                        <em></em>
+                    <div class="statics clearfix">
+                        <div class="static-item ">
+                            <span class="meta-value"><strong>{{ course.get_degree_display }}</strong></span>
+                            <span class="meta">难度</span>
+                            <em></em>
+                        </div>
+                        <div class="static-item static-time">
+                            <span class="meta-value">{{ course.learn_time }}分钟</span>
+                            <span class="meta">时长</span>
+                            <em></em>
+                        </div>
+                        <div class="static-item">
+                            <span class="meta-value"><strong>{{ course.students }}</strong></span>
+                            <span class="meta">学习人数</span>
+                            <em></em>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endblock %}
         </div>
         <div class="course-info-main clearfix w has-progress">
             {% block video_comment %}
@@ -50,11 +52,11 @@
                         <div class="content">
                             <div class="mod-tab-menu">
                                 <ul class="course-menu clearfix">
-                                    <li><a class="ui-tabs-active active {% if request.path == '' %}{% endif %}"
-                                           id="learnOn"
-                                           href="{% url 'course_lesson' course.id %}"><span>章节{{ request.user.id }}</span></a>
+                                    <li><a class="ui-tabs-active {% ifequal page_label 'lesson' %}active{% endifequal %}"
+                                           id="learnOn" target="_self"
+                                           href="{% url 'course_lesson' course.id %}"><span>章节</span></a>
                                     </li>
-                                    <li><a id="commentOn" class=""
+                                    <li><a id="commentOn" class="{% ifequal page_label 'comment' %}active{% endifequal %}" target="_self"
                                            href="{% url 'course_comment' course.id %}"><span>评论</span></a></li>
                                 </ul>
                             </div>
@@ -87,7 +89,7 @@
                                                  height='80'/>
                                         </a>
                                         <span class="tit">
-          <a href="/u/315464/courses?sort=publish" target="_blank">{{ course.teacher.name }}</a>
+          <a href="" target="_blank">{{ course.teacher.name }}</a>
         </span>
                                         <span class="job">{{ course.teacher.work_years }}</span>
                                     </div>
@@ -116,9 +118,9 @@
                                                 {% for course in relate_course %}
                                                     <li class="curr">
                                                         <a href="{% url 'course_detail' course.id %}" target="_blank">
-                                                            <img src="{{ MEDIA_URL }}{{ course.course.course_image }}"
-                                                                 alt="{{ course.course.name }}">
-                                                            <span class="name autowrap">{{ course.course.name }}</span>
+                                                            <img src="{{ MEDIA_URL }}{{ course.course_image }}"
+                                                                 alt="{{ course.name }}">
+                                                            <span class="name autowrap">{{ course.name }}</span>
                                                         </a>
                                                     </li>
                                                 {% endfor %}

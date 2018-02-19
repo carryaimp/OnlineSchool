@@ -31,7 +31,7 @@
                 <ul class="video">
                     {% for video in lesson.video_set.all %}
                         <li>
-                            <a target="_blank" href=''
+                            <a target="_self" href='{% url 'video_play' course.id video.id %}'
                                class="J-media-item studyvideo">{{ video.name }}
                                 <i class="study-state"></i>
                             </a>

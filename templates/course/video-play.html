@@ -1,0 +1,35 @@
+{% extends 'course/course-video.html' %}
+
+{% block title %}
+    视频播放-云学在线
+{% endblock %}
+
+{% block add_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/base.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/common-less.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/course/learn-less.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/mooc.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/course/common-less.css">
+    <link href="/static/css/video.css" rel="stylesheet">
+{% endblock %}
+
+{% block main_head %}
+    <div class="course-infos">
+        <video style="margin: 0 auto 0" class="video-js vjs-default-skin vjs-big-play-centered"
+               id="my-player"
+               class="video-js"
+               controls
+               preload="auto"
+               poster="{{ MEDIA_URL }}{{ course.course_image }}"
+               data-setup='{}' width="1200">
+            <source src="{{ video.url }}" type="video/mp4">
+            <source src="{{ video.url }}" type="video/webm">
+            <source src="{{ video.url }}" type="video/ogg">
+        </video>
+    </div>
+{% endblock %}
+
+{% block add_js %}
+    <script src="/static/js/video.js"></script>
+{% endblock %}

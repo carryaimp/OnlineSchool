@@ -10,7 +10,7 @@ from django.db.models import Q
 
 from .models import UserProfile, EmailVerifyRecord
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
-from .tools import send_email, get_mail_url
+from tools.send_email import send_email, get_mail_url
 
 
 class CustomBackend(ModelBackend):
