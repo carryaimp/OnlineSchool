@@ -6,6 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <title>{% block title %}课程机构列表 - 云学在线网{% endblock %}</title>
+    <link rel="icon" href="/static/images/page-logo.png">
     <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
     <link rel="stylesheet" type="text/css" href="/static/css/animate.css">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
@@ -20,28 +21,29 @@
             <div class="top">
                 <div class="wp">
                     <div class="fl"><p>服务电话：<b>155-7000-800</b></p></div>
-                    <!--登录后跳转-->
                     {% if request.user.is_authenticated %}
                         <div class="personal">
                             <dl class="user fr">
-                                <dd>{% if user.nick_name %}{{ user.nick_name }}{% else %}
-                                    {{ user.username }}{% endif %}<img class="down fr"
-                                                                       src="/static/images/top_down.png"/></dd>
-                                <dt><img width="20" height="20" src="{{ MEDIA_URL }}{{ user.head_image }}"/>
+                                <dd>{{ request.user.nick_name|default_if_none:request.user.username }}<img
+                                        class="down fr"
+                                        src="/static/images/top_down.png"/></dd>
+                                <dt><a href="{% url 'user_info' %}"><img width="20" height="20" src="
+                                        {{ MEDIA_URL }}{{ user.head_image }}"/></a>
                                 </dt>
                             </dl>
                             <div class="userdetail">
                                 <dl>
-                                    <dt><img width="80" height="80"
-                                             src="{{ MEDIA_URL }}{{ user.head_image }}"/></dt>
+                                    <dt><a href="{% url 'user_info' %}"><img width="80" height="80"
+                                                                             src="
+                                                                                     {{ MEDIA_URL }}{{ user.head_image }}"/></a>
+                                    </dt>
                                     <dd>
                                         <h2>{{ user.last_login }}</h2>
-                                        <p>{% if user.nick_name %}{{ user.nick_name }}{% else %}
-                                            {{ user.username }}{% endif %}</p>
+                                        <p>{{ request.user.nick_name|default_if_none:request.user.username }}</p>
                                     </dd>
                                 </dl>
                                 <div class="btn">
-                                    <a class="personcenter fl" href="usercenter-info.html">个人中心</a>
+                                    <a class="personcenter fl" href="{% url 'user_info' %}">个人中心</a>
                                     <a class="fr" href="{% url 'logout' %}">退出</a>
                                 </div>
                             </div>
@@ -51,7 +53,14 @@
                         <a style="color:white" class="fr loginbtn" href="{% url 'login' %}">登录</a>
 
                     {% endif %}
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.unread_num %}
+                            <a href="{% url 'user_message' %}">
+                                <div class="msg-num"><span id="MsgNum">{{ request.user.unread_num }}</span></div>
+                            </a>
+                        {% endif %}
 
+                    {% endif %}
 
                 </div>
             </div>
@@ -78,7 +87,8 @@
                 <div class="nav">
                     <div class="wp">
                         <ul>
-                            <li class="{% if request.path == '/' %}active{% endif %}"><a href="{% url 'index' %}">首页</a></li>
+                            <li class="{% if request.path == '/' %}active{% endif %}"><a href="{% url 'index' %}">首页</a>
+                            </li>
                             <li class="{% if request.path|slice:':8' == '/course/' %}active{% endif %}">
                                 <a href="{% url 'course_list' %}">
                                     公开课<img class="hot" src="/static/images/nav_hot.png">
@@ -87,7 +97,8 @@
                             <li class="{% if request.path|slice:':12' == '/org/teacher' %}active{% endif %}">
                                 <a href="{% url 'teacher' %}">授课教师</a>
                             </li>
-                            <li class="{% if request.path|slice:':9' == '/org/list' %}active{% endif %}"><a href="{% url 'org_list' %}">授课机构</a></li>
+                            <li class="{% if request.path|slice:':9' == '/org/list' %}active{% endif %}"><a
+                                    href="{% url 'org_list' %}">授课机构</a></li>
                         </ul>
                     </div>
                 </div>

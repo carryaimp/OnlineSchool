@@ -37,5 +37,8 @@ urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
     # 用户操作逻辑业务
     path('operation/', include('operation.urls')),
-    path('course/', include('course.urls'))
+    # 课程相关
+    path('course/', include('course.urls')),
+    # 用户中心
+    path('center/', include('operation.urls'))
 ]

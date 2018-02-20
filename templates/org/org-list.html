@@ -92,10 +92,11 @@
                                             <p class="c7">学习人数：<span>{{ org.student_num }}</span></p></li>
                                         <li class="c8" style="padding-left:18px;">{{ org.address }}</li>
                                         <li class="pic10" style="padding-left:18px;">经典课程：
+                                            {% for course in org.good_course %}
+                                                <a href="/diary/19/">{{ course.name }}</a>
 
-                                            <a href="/diary/19/">c语言基础入门</a>
+                                            {% endfor %}
 
-                                            <a href="/diary/16/">数据库基础</a>
 
                                         </li>
                                     </ul>
@@ -157,7 +158,7 @@
                     <dl class="des">
                         <dt class="num fl">{{ forloop.counter }}</dt>
                         <dd>
-                            <a href="/company/2/"><h1>{{ org.name }}</h1></a>
+                            <a href="{% url 'org_home' org.id %}"><h1>{{ org.name }}</h1></a>
                             <p>{{ org.city }}</p>
                         </dd>
                     </dl>

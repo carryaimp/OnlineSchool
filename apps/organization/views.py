@@ -37,8 +37,8 @@ class OrgListView(View):
         if sort_key == 'course':
             all_org = all_org.order_by('-course_num')
         all_city = City.objects.all()
-
         org_num = all_org.count()
+
         # 获得页码, 并对课程机构进行分页
         try:
             page = request.GET.get('page', 1)
@@ -47,6 +47,7 @@ class OrgListView(View):
         p = Paginator(all_org, per_page=5, request=request)
         # 进行分页
         all_org = p.page(page)
+
         return render(request, 'org/org-list.html', {
             'all_org': all_org,
             'all_city': all_city,
@@ -81,8 +82,16 @@ class OrgHome(View):
     def get(self, request, org_id):
         page_label = 'home'
         render_data = dict()
-        if org_id:
-            org = CourseOrg.objects.get(id=org_id)
+        if org_id > 0:
+            try:
+                org = CourseOrg.objects.get(id=org_id)
+            except:
+                return redirect(to='index')
+
+            # 统计
+            org.click_num += 1
+            org.save()
+
             # 通过外键反查
             all_course = org.course_set.all()[:3]
             all_teacher = org.teacher_set.all()[:1]
@@ -106,8 +115,11 @@ class OrgDescView(View):
     def get(self, request, org_id):
         page_label = 'desc'
         render_data = dict()
-        if org_id:
-            org = CourseOrg.objects.get(id=org_id)
+        if org_id > 0:
+            try:
+                org = CourseOrg.objects.get(id=org_id)
+            except:
+                return redirect(to='index')
             # 通过外键反查
             render_data['org'] = org
             render_data['page_label'] = page_label
@@ -128,7 +140,10 @@ class OrgCourseView(View):
         page_label = 'course'
         render_data = dict()
         if org_id:
-            org = CourseOrg.objects.get(id=org_id)
+            try:
+                org = CourseOrg.objects.get(id=org_id)
+            except:
+                return redirect(to='index')
             # 通过外键反查
             all_course = org.course_set.all()
             has_fav = False
@@ -139,6 +154,24 @@ class OrgCourseView(View):
             render_data['page_label'] = page_label
             render_data['has_fav'] = has_fav
             return render(request, 'org/org-detail-course.html', render_data)
+        else:
+            return redirect(to='index')
+
+
+class OrgTeacherView(View):
+    def get(self, request, org_id):
+        if org_id:
+            try:
+                org = CourseOrg.objects.get(id=org_id)
+            except:
+                return redirect(to='index')
+            has_fav = True if UserFavorite.objects.filter(fav_id=org.id, fav_type=2) else False
+            render_data = dict()
+            all_teacher = Teacher.objects.filter(org=org)
+            render_data['all_teacher'] = all_teacher
+            render_data['org'] = org
+            render_data['has_fav'] = has_fav
+            return render(request, 'org/org-detail-teachers.html', render_data)
         else:
             return redirect(to='index')
 
@@ -189,11 +222,17 @@ class OrgTeacherDetailView(View):
             teacher = Teacher.objects.get(id=teacher_id)
         except:
             return redirect(to='teacher')
+        # 统计
+        teacher.click_num += 1
+        teacher.save()
+
         render_data = dict()
+        # 是否收藏判断
         has_teacher_fav = True if UserFavorite.objects.filter(user=request.user, fav_id=teacher.id, fav_type=3) else False
         has_org_fav = True if UserFavorite.objects.filter(user=request.user, fav_id=teacher.org.id, fav_type=2) else False
         all_course = teacher.get_all_course()
         hot_teacher = Teacher.objects.all().order_by('-fav_num')[:3]
+
         # 分页
         try:
             page = request.GET.get('page', 1)

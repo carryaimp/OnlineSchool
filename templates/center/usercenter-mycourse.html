@@ -1,0 +1,69 @@
+{% extends 'center/center-base.html' %}
+
+{% block title %}
+    我的课程- 云学
+{% endblock %}
+
+{% block wrapper %}
+    我的课程
+{% endblock %}
+
+{% block right %}
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的课程</h1>
+            </div>
+        </div>
+        <div class="personal_des permessage">
+            <div class="companycenter">
+                <div class="group_list brief">
+                    {% for course in all_course.object_list %}
+                                        <div class="module1_5 box">
+                        <a href="{% url 'course_detail' course.course.id %}">
+                            <img width="214" height="190" class="scrollLoading"
+                                 src="{{ MEDIA_URL }}{{ course.course.course_image }}"/>
+                        </a>
+                        <div class="des">
+                            <a href="{% url 'course_detail' course.course.id %}"><h2>{{ course.course.name }}</h2></a>
+                            <span class="fl">课时：<i class="key">{{ course.course.learn_time }}</i></span>
+                            <span class="fr">学习人数：{{ course.course.students }}</span>
+                        </div>
+                        <div class="bottom">
+                            <span class="fl">{{ course.course.org.name }}</span>
+                            <span class="star fr  notlogin" data-favid="15">{{ course.course.fav_num }}</span>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+                                <div class="pageturn">
+                        <ul class="pagelist">
+                            {% if all_course.has_previous %}
+                                <li class="long"><a href="?{{ all_course.previous_page_number.querystring }}">上一页</a></li>
+                            {% endif %}
+                            {% for page in all_course.pages %}
+                                {% if page %}
+                                    {% ifequal page all_course.number %}
+                                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% endifequal %}
+                                {% else %}
+                                    <li class="none"><a href="">...</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if all_course.has_next %}
+                                <li class="long"><a href="?{{ all_course.next_page_number.querystring }}">下一页</a></li>
+                            {% endif %}
+                        </ul>
+
+                    </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

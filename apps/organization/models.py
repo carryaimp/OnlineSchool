@@ -62,6 +62,10 @@ class CourseOrg(models.Model):
         # 获得对应机构老师的数量
         return self.teacher_set.all().count()
 
+    def good_course(self):
+        # 获得两个经典课程
+        return self.course_set.all()[:2]
+
 
 class Teacher(models.Model):
     """

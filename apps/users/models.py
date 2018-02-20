@@ -33,6 +33,14 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
+    def unread_num(self):
+        """
+        获取全局的一个消息数通知
+        如果其他想要加入request全局的参数，都需要在此写上对应的方法
+        """
+        from operation.models import UserMessage
+        return UserMessage.objects.filter(user=self.id, has_read=False).count()
+
 
 class Banner(models.Model):
     """
@@ -59,12 +67,14 @@ class EmailVerifyRecord(models.Model):
     """
     email_type = (
         ('register', '注册'),
-        ('forget', '忘记密码')
+        ('forget', '忘记密码'),
+        ('update', '修改邮箱')
     )
     code = models.CharField(max_length=36, verbose_name='验证码')
     email = models.EmailField(max_length=100, verbose_name='邮箱')
     send_type = models.CharField(max_length=10, choices=email_type, verbose_name='验证类型')
     send_time = models.DateTimeField(auto_now_add=True, editable=False, blank=True, verbose_name='发送时间')
+    has_used = models.BooleanField(default=False, verbose_name='是否已经使用')
 
     class Meta:
         verbose_name = '邮箱验证码'

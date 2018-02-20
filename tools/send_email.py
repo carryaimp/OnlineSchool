@@ -13,7 +13,10 @@ from OnlineSchool.settings import EMAIL_FROM
 
 def send_email(email_address=None, email_type='register'):
     # 用于发送邮件验证码，用于激活和忘记密码逻辑验证
-    random_str = get_random_str(12)
+    if email_type == 'update':
+        random_str = get_random_str(length=6)
+    else:
+        random_str = get_random_str(length=12)
     email_record = EmailVerifyRecord()
     email_record.code = random_str
     email_record.email = email_address
@@ -21,17 +24,27 @@ def send_email(email_address=None, email_type='register'):
     email_record.save()
     # 注册类型邮件
     if email_type == 'register':
-        email_title = '云学在线账号激活'
+        email_title = '云学 - 账号激活'
         email_content = '请点击以下链接完成账号激活，如果不是本人忽略。http://127.0.0.1:8000/user/active/{code}'.format(code=random_str)
         send_status = send_mail(subject=email_title, message=email_content, from_email=EMAIL_FROM, recipient_list=[email_address])
         return send_status
     # 忘记密码重置密码邮件
-    if email_type == 'forget':
-        email_title = '云学在线账号修改密码'
+    elif email_type == 'forget':
+        email_title = '云学 - 修改密码'
         email_content = '请点击以下链接完成账号密码修改，如果不是本人忽略。http://127.0.0.1:8000/user/reset/{code}'.format(code=random_str)
         send_status = send_mail(subject=email_title, message=email_content, from_email=EMAIL_FROM,
                                 recipient_list=[email_address])
         return send_status
+
+    # 修改用户邮箱
+    elif email_type == 'update':
+        email_title = '云学 - 邮箱修改'
+        email_content = '邮箱验证码：{code}'.format(code=random_str)
+        send_status = send_mail(subject=email_title, message=email_content, from_email=EMAIL_FROM,
+                                recipient_list=[email_address])
+        return send_status
+    else:
+        return False
 
 
 def get_random_str(length=12):
@@ -39,7 +52,7 @@ def get_random_str(length=12):
     choice_str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
     m = hashlib.md5()
     m.update(''.join(sample(choice_str, length)).encode('utf-8'))
-    return m.hexdigest()
+    return m.hexdigest()[:length]
 
 
 def get_mail_url(email=None):

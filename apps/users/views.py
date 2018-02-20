@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from datetime import  datetime
+
+from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic.base import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
@@ -9,10 +11,12 @@ from django.db.models import Q
 
 
 from .models import UserProfile, EmailVerifyRecord, Banner
+from operation.models import UserMessage
 from organization.models import CourseOrg
 from course.models import Course
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm
 from tools.send_email import send_email, get_mail_url
+from tools.need_login import NeedLoginViewMinx
 
 
 class CustomBackend(ModelBackend):
@@ -69,7 +73,7 @@ class LoginView(View):
             return render(request, 'user/login.html', render_data)
 
 
-class LogoutView(View):
+class LogoutView(NeedLoginViewMinx, View):
     """
     用户退出登录
     """
@@ -110,6 +114,13 @@ class RegisterView(View):
                 user_profile.password = make_password(user_pwd)
                 user_profile.is_active = 0
                 user_profile.save()
+
+                # 写入消息
+                person_message = UserMessage()
+                person_message.user = user_profile
+                person_message.message = '{username} 您好啊，欢迎注册！'.format(username=user_email)
+                person_message.save()
+
                 # 跳转到登录邮箱验证页面？或者跳转到登录页面
                 email_url = get_mail_url(email=user_email)
                 return redirect(to=email_url)
@@ -138,9 +149,17 @@ class ForgetView(View):
         render_data['forget_form'] = forget_form
         render_data['email'] = email if email else ''
         if forget_form.is_valid():
-            if UserProfile.objects.filter(email=email):
+            user_profile = UserProfile.objects.filter(email=email, is_active=True)
+            if user_profile:
                 send_status = send_email(email_address=email, email_type='forget')
                 if send_status:
+
+                    # 写入发送找回邮件消息
+                    person_message = UserMessage()
+                    person_message.user = user_profile
+                    person_message.message = '你已发送找回密码邮件(email)哦'.format(email=email)
+                    person_message.save()
+
                     # 自动跳转到邮箱登录页面
                     email_url = get_mail_url(email=email)
                     return redirect(to=email_url)
@@ -177,9 +196,9 @@ class ModifyView(View):
     def post(self, request):
         modify_pwd_form = ModifyPwdForm(request.POST)
         render_data = dict()
-        render_data['reset_pwd_form'] = modify_pwd_form
         email = request.POST.get('email', None)
         email_code = request.POST.get('email_code', None)
+        render_data['reset_pwd_form'] = modify_pwd_form
         render_data['email'] = email if email else ''
         render_data['email_code'] = email_code if email_code else ''
         # 验证提交数据是否合法
@@ -197,7 +216,7 @@ class ModifyView(View):
                     # 验证邮箱是否更改
                     if email == user_email:
                         # 更改密码
-                        user_profile = UserProfile.objects.get(email=email)
+                        user_profile = UserProfile.objects.get(email=email, is_active=True)
                         user_profile.password = make_password(sure_password)
                         user_profile.save()
                         return redirect(to='login')
@@ -228,6 +247,12 @@ class ActiveView(View):
             if user_active:
                 user_active.is_active = True
                 user_active.save()
+
+                # 存放消息
+                message = UserMessage()
+                message.user = user_active.id
+                message.message = "账号激活啦"
+
                 return redirect(to='login')
             else:
                 return redirect(to='register')
@@ -239,10 +264,15 @@ class HomeView(View):
     """站点首页"""
     def get(self, request):
         render_data = dict()
+        # 轮播图
         banners = Banner.objects.all().order_by('-index')[:5]
+        # 所有课程
         all_course = Course.objects.all()
+        # 轮播课程
         course_banners = all_course.order_by('-click_num')[:3]
+        # 最新课程
         home_courses = all_course.order_by('-add_time')[:6]
+        # 热门机构
         home_orgs = CourseOrg.objects.all()[:15]
         render_data['banners'] = banners
         render_data['course_banners'] = course_banners

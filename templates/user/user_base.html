@@ -6,6 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <title>云在线学习网</title>
+    <link rel="icon" href="/static/images/page-logo.png">
     <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
     <link rel="stylesheet" type="text/css" href="/static/css/login.css">
 </head>
@@ -27,7 +28,7 @@
     <div class="c-box bg-box">
         <div class="login-box clearfix">
             <div class="hd-login clearfix">
-                <a class="index-logo" href="../index.html"></a>
+                <a class="index-logo" href="{% url 'index' %}"></a>
                 <h1>用户登录</h1>
                 <a class="index-font" href="{% url 'index' %}">回到首页</a>
             </div>

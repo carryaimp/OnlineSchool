@@ -55,8 +55,11 @@ class CourseDetailView(View):
             course = Course.objects.get(id=course_id)
             if course:
                 render_data['course'] = course
+
+                # 统计
                 course.click_num += 1
                 course.save()
+
                 # 判断是否收藏
                 has_fav_course = False
                 has_fav_org = False
@@ -71,6 +74,8 @@ class CourseDetailView(View):
                 else:
                     render_data['has_fav_course'] = has_fav_course
                     render_data['has_fav_org'] = has_fav_org
+
+                # 相关课程推荐
                 category = course.category
                 if category:
                     relate_course = Course.objects.filter(category__icontains=category)[:1]
@@ -85,77 +90,82 @@ class CourseDetailView(View):
 
 
 class LessonView(NeedLoginViewMinx, View):
-    """课程章节视频页面"""
+    """课程章节视频详情页面"""
     def get(self, request, course_id):
         page_label = 'lesson'
-        if course_id:
-            course = Course.objects.get(id=course_id)
-            if course:
-                # 保存用户学习学习课程
-                if not UserCourse.objects.filter(user=request.user, course=course):
-                    user_course = UserCourse(user=request.user, course=course)
-                    user_course.save()
-
-                # 找出学习了该课程的所有的用户
-                user_id_list = [user.user.id for user in UserCourse.objects.filter(course=course)]
-                # 找出这些用户ID对应的课程
-                user_course = UserCourse.objects.filter(user__in=user_id_list)
-                # 找出所有的课程ID
-                course_id_list = [i.course.id for i in user_course]
-                course_id_list.remove(course.id)
-                # 获得推进课程
-                relate_course = Course.objects.filter(id__in=course_id_list).order_by('-students')[:3]
-
-                all_lesson = Lesson.objects.filter(course=course)
-                all_course_resource = CourseResource.objects.filter(course=course)
-                render_data = dict()
-                render_data['course'] = course
-                render_data['all_lesson'] = all_lesson
-                render_data['all_course_resource'] = all_course_resource
-                render_data['relate_course'] = relate_course
-                render_data['page_label'] = page_label
-                return render(request, 'course/course-video.html', render_data)
-            else:
+        if course_id > 0:
+            try:
+                course = Course.objects.get(id=course_id)
+            except:
                 return redirect(to='index')
+
+            # 保存用户学习学习课程
+            if not UserCourse.objects.filter(user=request.user, course=course):
+                user_course = UserCourse(user=request.user, course=course)
+                user_course.save()
+
+                # 统计
+                course.students += 1
+                course.save()
+
+            # 找出学习了该课程的所有的用户
+            user_id_list = [user.user.id for user in UserCourse.objects.filter(course=course)]
+            # 找出这些用户ID对应的课程
+            user_course = UserCourse.objects.filter(user__in=user_id_list)
+            # 找出所有的课程ID
+            course_id_list = [i.course.id for i in user_course]
+            course_id_list.remove(course.id)
+            # 获得3个推荐课程
+            relate_course = Course.objects.filter(id__in=course_id_list).order_by('-students')[:3]
+
+            all_lesson = Lesson.objects.filter(course=course)
+            all_course_resource = CourseResource.objects.filter(course=course)
+            render_data = dict()
+            render_data['course'] = course
+            render_data['all_lesson'] = all_lesson
+            render_data['all_course_resource'] = all_course_resource
+            render_data['relate_course'] = relate_course
+            render_data['page_label'] = page_label
+            return render(request, 'course/course-video.html', render_data)
         else:
             return redirect(to='index')
 
 
 class CommentView(NeedLoginViewMinx, View):
     """
-    课程评论页面
+    课程评论页面,post方式提交数据
     """
     def get(self, request, course_id):
         page_label = 'comment'
-        if course_id:
-            course = Course.objects.get(id=course_id)
-            if course:
-                all_lesson = Lesson.objects.filter(course=course)
-                # 所有章节信息
-                all_course_resource = CourseResource.objects.filter(course=course)
-
-                # 找出学习了该课程的所有的用户
-                user_id_list = [user.user.id for user in UserCourse.objects.filter(course=course)]
-                # 找出这些用户ID对应的课程
-                user_course = UserCourse.objects.filter(user__in=user_id_list)
-                # 找出所有的课程ID
-                course_id_list = [i.course.id for i in user_course]
-                course_id_list.remove(course.id)
-                # 获得推进课程
-                relate_course = Course.objects.filter(id__in=course_id_list).order_by('-students')[:3]
-
-                # 课程评论
-                all_commit = CourseComment.objects.filter(course=course).order_by('-add_time')
-                render_data = dict()
-                render_data['course'] = course
-                render_data['all_lesson'] = all_lesson
-                render_data['all_course_resource'] = all_course_resource
-                render_data['relate_course'] = relate_course
-                render_data['all_commit'] = all_commit
-                render_data['page_label'] = page_label
-                return render(request, 'course/course-comment.html', render_data)
-            else:
+        if course_id > 0:
+            try:
+                course = Course.objects.get(id=course_id)
+            except:
                 return redirect(to='index')
+            all_lesson = Lesson.objects.filter(course=course)
+            # 所有章节信息
+            all_course_resource = CourseResource.objects.filter(course=course)
+
+            # 找出学习了该课程的所有的用户
+            user_id_list = [user.user.id for user in UserCourse.objects.filter(course=course)]
+            # 找出这些用户ID对应的课程
+            user_course = UserCourse.objects.filter(user__in=user_id_list)
+            # 找出所有的课程ID
+            course_id_list = [i.course.id for i in user_course]
+            course_id_list.remove(course.id)
+            # 获得推进课程
+            relate_course = Course.objects.filter(id__in=course_id_list).order_by('-students')[:3]
+
+            # 课程评论
+            all_commit = CourseComment.objects.filter(course=course).order_by('-add_time')
+            render_data = dict()
+            render_data['course'] = course
+            render_data['all_lesson'] = all_lesson
+            render_data['all_course_resource'] = all_course_resource
+            render_data['relate_course'] = relate_course
+            render_data['all_commit'] = all_commit
+            render_data['page_label'] = page_label
+            return render(request, 'course/course-comment.html', render_data)
         else:
             return redirect(to='index')
 
@@ -172,6 +182,7 @@ class CommentView(NeedLoginViewMinx, View):
             course_comment_form = CourseCommentForm(request.POST)
             # 通过form类验证提交字段是否合法
             if course_comment_form.is_valid():
+                # 保存课程评论
                 course_comment_form.save()
                 response_data['status'] = 'success'
                 response_data['msg'] = '提交成功'
@@ -187,39 +198,42 @@ class CommentView(NeedLoginViewMinx, View):
         
     
 class VideoPlayView(NeedLoginViewMinx, View):
+    """用户视频播放页面"""
     def get(self, request, course_id, video_id):
         page_label = 'lesson'
-        if video_id and course_id:
-            course = Course.objects.get(id=course_id)
-            if course:
-                all_lesson = Lesson.objects.filter(course=course)
-                # 所有章节信息
-                all_course_resource = CourseResource.objects.filter(course=course)
-
-                # 找出学习了该课程的所有的用户
-                user_id_list = [user.user.id for user in UserCourse.objects.filter(course=course)]
-                # 找出这些用户ID对应的课程
-                user_course = UserCourse.objects.filter(user__in=user_id_list)
-                # 找出所有的课程ID
-                course_id_list = [i.course.id for i in user_course]
-                course_id_list.remove(course.id)
-                # 获得推进课程
-                relate_course = Course.objects.filter(id__in=course_id_list).order_by('-students')[:3]
-
-                # 课程评论
-                all_commit = CourseComment.objects.filter(course=course).order_by('-add_time')
-                # 视频相关
-                video = Video.objects.get(id=video_id)
-
-                render_data = dict()
-                render_data['course'] = course
-                render_data['all_lesson'] = all_lesson
-                render_data['all_course_resource'] = all_course_resource
-                render_data['relate_course'] = relate_course
-                render_data['all_commit'] = all_commit
-                render_data['video'] = video
-                render_data['page_label'] = page_label
-                return render(request, 'course/video-play.html', render_data)
-            else:
+        if video_id > 0 and course_id > 0:
+            try:
+                course = Course.objects.get(id=course_id)
+            except:
                 return redirect(to='index')
+            # 所有章节和课程资源信息
+            all_lesson = Lesson.objects.filter(course=course)
+            all_course_resource = CourseResource.objects.filter(course=course)
+
+            # 找出学习了该课程的所有的用户
+            user_id_list = [user.user.id for user in UserCourse.objects.filter(course=course)]
+            # 找出这些用户ID对应的课程
+            user_course = UserCourse.objects.filter(user__in=user_id_list)
+            # 找出所有的课程ID
+            course_id_list = [i.course.id for i in user_course]
+            course_id_list.remove(course.id)
+            # 获得推进课程
+            relate_course = Course.objects.filter(id__in=course_id_list).order_by('-students')[:3]
+
+            # 课程评论
+            all_commit = CourseComment.objects.filter(course=course).order_by('-add_time')
+            # 视频相关
+            video = Video.objects.get(id=video_id)
+
+            render_data = dict()
+            render_data['course'] = course
+            render_data['all_lesson'] = all_lesson
+            render_data['all_course_resource'] = all_course_resource
+            render_data['relate_course'] = relate_course
+            render_data['all_commit'] = all_commit
+            render_data['video'] = video
+            render_data['page_label'] = page_label
+            return render(request, 'course/video-play.html', render_data)
+        else:
+            return redirect(to='index')
 
