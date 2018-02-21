@@ -50,6 +50,7 @@ class Banner(models.Model):
     banner_image = models.ImageField(max_length=50, upload_to='banner/%Y/%m', verbose_name='轮播图')
     index = models.IntegerField(default=100, verbose_name='顺序')
     url = models.URLField(max_length=200, verbose_name='网页地址')
+    is_up = models.BooleanField(default=False, verbose_name='是否轮播')
 
     add_time = models.DateTimeField(auto_now_add=True, editable=True, blank=True, verbose_name='添加时间')
 
@@ -59,6 +60,22 @@ class Banner(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class UPBanner(Banner):
+    """上架轮播图"""
+    class Meta:
+        verbose_name = '上架轮播图'
+        verbose_name_plural = verbose_name
+        proxy = True
+
+
+class DownBanner(Banner):
+    """下架轮播图"""
+    class Meta:
+        verbose_name = '上架轮播图'
+        verbose_name_plural = verbose_name
+        proxy = True
 
 
 class EmailVerifyRecord(models.Model):

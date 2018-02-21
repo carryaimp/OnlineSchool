@@ -47,6 +47,13 @@ class Course(models.Model):
     def lesson_num(self):
         # 获得单个实例的章节数
         return self.lesson_set.all().count()
+    # 定义后台显示名称
+    lesson_num.short_description = '章节数'
+
+    def go_to(self):
+        from django.utils.safestring import mark_safe
+        return mark_safe('<a>http://www.cnblogs.com/2bjiujiu/</a>')
+    go_to.short_description = 'blog-北门吹雪'
 
     def learn_user(self):
         # 获得学习该课程的学生，只取5个

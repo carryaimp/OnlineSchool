@@ -2,7 +2,7 @@ __author__ = 'beimenchuixue'
 __blog__ = 'http://www.cnblogs.com/2bjiujiu/'
 __date__ = '2018/2/8 22:03'
 
-from .models import EmailVerifyRecord, Banner, UserProfile
+from .models import EmailVerifyRecord, Banner, UserProfile, UPBanner, DownBanner
 
 import xadmin
 from xadmin import views
@@ -35,6 +35,8 @@ class EmailVerifyRecordAdmin(object):
     list_display = ['code', 'email', 'send_type', 'send_time']
     search_fields = ['code', 'email', 'send_type']
     list_filter = ['code', 'email', 'send_type', 'send_time']
+    # 设置可编辑时间
+    list_editable = ['code', 'email', 'send_type']
     model_icon = 'fa fa-envelope'
     pass
 
@@ -45,6 +47,31 @@ class BannerAdmin(object):
     list_filter = ['title', 'banner_image', 'index', 'url', 'add_time']
     model_icon = 'fa fa-picture-o'
 
+
+class UpBannerAdmin(object):
+    """上架轮播图admin"""
+    list_display = ['title', 'banner_image', 'index', 'url', 'add_time']
+    search_fields = ['title', 'banner_image', 'index', 'url']
+    list_filter = ['title', 'banner_image', 'index', 'url', 'add_time']
+    model_icon = 'fa fa-picture-o'
+
+    def queryset(self):
+        # 过滤出 is_up = True 的数据
+        qs = super(UpBannerAdmin, self).queryset()
+        return qs.filter(is_up=True)
+
+
+class DownBannerAdmin(object):
+    """下架轮播图admin"""
+    list_display = ['title', 'banner_image', 'index', 'url', 'add_time']
+    search_fields = ['title', 'banner_image', 'index', 'url']
+    list_filter = ['title', 'banner_image', 'index', 'url', 'add_time']
+    model_icon = 'fa fa-picture-o'
+
+    def queryset(self):
+        # 过滤出 is_up = True 的数据
+        qs = super(DownBannerAdmin, self).queryset()
+        return qs.filter(is_up=False)
 
 # class UserProfileAdmin(object):
 #     list_display = ['username', 'email', 'nick_name', 'birthday', 'gender', 'address', 'mobile', 'add_time']
@@ -60,3 +87,5 @@ xadmin.site.register(views.CommAdminView, CommonSetting)
 xadmin.site.register(UserProfile, UserProfileAdmin)
 xadmin.site.register(EmailVerifyRecord, EmailVerifyRecordAdmin)
 xadmin.site.register(Banner, BannerAdmin)
+xadmin.site.register(UPBanner, UpBannerAdmin)
+xadmin.site.register(DownBanner, DownBannerAdmin)

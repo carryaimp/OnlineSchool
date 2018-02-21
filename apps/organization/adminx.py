@@ -14,15 +14,20 @@ class CityAdmin(object):
     search_fields = ['name', 'desc']
     list_filter = ['name', 'desc', 'add_time']
     model_icon = 'fa fa-map-marker'
+    relfield_style = 'fk-ajax'
 
 
 class CourseOrgAdmin(object):
     list_display = ['city', 'name', 'org_image', 'desc', 'address', 'click_num', 'fav_num', 'add_time']
-    search_fields = ['city', 'name', 'org_image', 'desc', 'address', 'click_num', 'fav_num']
+    search_fields = ['city__name', 'name', 'org_image', 'desc', 'address', 'click_num', 'fav_num']
     list_filter = ['city', 'name', 'org_image', 'desc', 'address', 'click_num', 'fav_num', 'add_time']
     model_icon = 'fa fa-graduation-cap'
     ordering = ['-click_num']
     readonly_fields = ['fav_num', 'click_num']
+    # 让某个字段不显示，和readonly_fields冲突
+    exclude = []
+    # 让某个键变得可搜索，只能放在有外键关联的models
+    relfield_style = 'fk-ajax'
 
 
 class TeacherAdmin(object):
@@ -32,6 +37,8 @@ class TeacherAdmin(object):
     model_icon = 'fa fa-black-tie'
     ordering = ['-click_num']
     readonly_fields = ['fav_num', 'click_num']
+
+
 
 
 # 注册顺序也是后台显示顺序

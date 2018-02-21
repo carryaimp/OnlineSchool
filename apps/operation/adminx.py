@@ -45,8 +45,8 @@ class UserCourseAdmin(object):
     model_icon = 'fa fa-book'
 
 
+xadmin.site.register(UserFavorite, UserFavoriteAdmin)
 xadmin.site.register(UserCourse, UserCourseAdmin)
 xadmin.site.register(CourseComment, CourseCommentAdmin)
-xadmin.site.register(UserFavorite, UserFavoriteAdmin)
 xadmin.site.register(UserMessage, UserMessageAdmin)
 xadmin.site.register(UserAsk, UserAskAdmin)
