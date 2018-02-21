@@ -13,24 +13,30 @@ class CourseAdmin(object):
     list_display = ['name', 'course_image', 'desc', 'detail', 'degree', 'learn_time', 'students', 'fav_num', 'click_num', 'add_time']
     search_fields = ['name', 'course_image', 'desc', 'detail', 'degree', 'learn_time', 'students', 'fav_num', 'click_num']
     list_filter = ['name', 'course_image', 'desc', 'detail', 'degree', 'learn_time', 'students', 'fav_num', 'click_num', 'add_time']
+    model_icon = 'fa fa-book'
+    ordering = ['-fav_num']
+    readonly_fields = ['fav_num', 'click_num', 'students']
 
 
 class LessonAdmin(object):
     list_display = ['course', 'name', 'add_time']
     search_fields = ['course', 'name']
     list_filter = ['course', 'name', 'add_time']
+    model_icon = 'fa fa-th-list'
 
 
 class VideoAdmin(object):
     list_display = ['lesson', 'name', 'add_time']
     search_fields = ['lesson', 'name']
     list_filter = ['lesson', 'name', 'add_time']
+    model_icon = 'fa fa-video-camera'
 
 
 class CourseResourceAdmin(object):
     list_display = ['course', 'name', 'download', 'add_time']
     search_fields = ['course', 'name', 'download']
     list_filter = ['course', 'name', 'download', 'add_time']
+    model_icon = 'fa fa-cloud-download'
 
 
 xadmin.site.register(Course, CourseAdmin)

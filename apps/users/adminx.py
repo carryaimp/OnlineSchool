@@ -6,6 +6,7 @@ from .models import EmailVerifyRecord, Banner, UserProfile
 
 import xadmin
 from xadmin import views
+from xadmin.plugins.auth import UserProfileAdmin
 
 
 class BaseSetting(object):
@@ -34,6 +35,7 @@ class EmailVerifyRecordAdmin(object):
     list_display = ['code', 'email', 'send_type', 'send_time']
     search_fields = ['code', 'email', 'send_type']
     list_filter = ['code', 'email', 'send_type', 'send_time']
+    model_icon = 'fa fa-envelope'
     pass
 
 
@@ -41,12 +43,13 @@ class BannerAdmin(object):
     list_display = ['title', 'banner_image', 'index', 'url', 'add_time']
     search_fields = ['title', 'banner_image', 'index', 'url']
     list_filter = ['title', 'banner_image', 'index', 'url', 'add_time']
+    model_icon = 'fa fa-picture-o'
 
 
-class UserProfileAdmin(object):
-    list_display = ['username', 'email', 'nick_name', 'birthday', 'gender', 'address', 'mobile', 'add_time']
-    search_fields = ['username', 'email', 'nick_name', 'birthday', 'gender', 'address', 'mobile']
-    list_filter = ['username', 'email', 'nick_name', 'birthday', 'gender', 'address', 'mobile', 'add_time']
+# class UserProfileAdmin(object):
+#     list_display = ['username', 'email', 'nick_name', 'birthday', 'gender', 'address', 'mobile', 'add_time']
+#     search_fields = ['username', 'email', 'nick_name', 'birthday', 'gender', 'address', 'mobile']
+#     list_filter = ['username', 'email', 'nick_name', 'birthday', 'gender', 'address', 'mobile', 'add_time']
 
 
 # 全局注册
@@ -54,7 +57,6 @@ xadmin.site.register(views.BaseAdminView, BaseSetting)
 xadmin.site.register(views.CommAdminView, CommonSetting)
 
 # 表注册，也就决定后台的models显示的顺序
-xadmin.site.unregister(UserProfile)
+xadmin.site.register(UserProfile, UserProfileAdmin)
 xadmin.site.register(EmailVerifyRecord, EmailVerifyRecordAdmin)
 xadmin.site.register(Banner, BannerAdmin)
-xadmin.site.register(UserProfile, UserProfileAdmin)
