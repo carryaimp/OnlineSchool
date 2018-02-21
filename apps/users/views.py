@@ -279,3 +279,5 @@ class HomeView(View):
         render_data['home_courses'] = home_courses
         render_data['home_orgs'] = home_orgs
         return render(request, 'index.html', render_data)
+
+

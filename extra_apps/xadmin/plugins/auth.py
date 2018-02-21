@@ -108,6 +108,10 @@ class UserAdmin(object):
         return super(UserAdmin, self).get_form_layout()
 
 
+class UserProfileAdmin(UserAdmin):
+    pass
+
+
 class PermissionAdmin(object):
 
     def show_name(self, p):

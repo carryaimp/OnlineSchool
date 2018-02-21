@@ -36,6 +36,7 @@ class CourseOrg(models.Model):
     desc = models.TextField(verbose_name='机构描叙')
     category = models.CharField(max_length=4, choices=org_category, default='pxjg', verbose_name='机构类别')
     address = models.CharField(max_length=150, verbose_name='机构地址')
+    tag = models.CharField(max_length=4, default='全国知名', verbose_name='机构标签')
 
     # 统计
     student_num = models.IntegerField(default=0, verbose_name='学习人数')

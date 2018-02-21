@@ -184,6 +184,9 @@ EMAIL_FROM = 'jia2jiayuan@163.com'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# # debug = False 时候，django进行静态文件代理
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # 分页设置
 PAGINATION_SETTINGS = {
     'PAGE_RANGE_DISPLAYED': 10,
