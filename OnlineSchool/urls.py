@@ -32,7 +32,7 @@ urlpatterns = [
     # 课程机构业务
     path('org/', include('organization.urls')),
     # # 图片前端显示, 这个是静态文件, 默认不展示，静态文件通过第三方如nginx或http进行代理
-    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
+    # re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
     # re_path(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
     # 用户操作逻辑业务
     path('operation/', include('operation.urls')),
