@@ -29,7 +29,7 @@ class CustomBackend(ModelBackend):
     """
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            user = UserProfile.objects.get(Q(username=username) | Q(password=password))
+            user = UserProfile.objects.get(Q(username=username) | Q(eamil=useranme))
 
             if user.check_password(raw_password=password):
                 return user
